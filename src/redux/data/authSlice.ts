@@ -1,8 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { api, AuthControllerAdminLoginApiResponse } from '../services/api';
+import { api, User  } from '../services/api';
 
 
-const initialState: Partial<AuthControllerAdminLoginApiResponse> = {
+export type AuthState = {
+  token: string,
+  user: User,
+};
+
+const initialState: Partial<AuthState> = {
   token: undefined,
   user: undefined,
 };
@@ -11,7 +16,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuthData: (state, action: PayloadAction<Partial<AuthControllerAdminLoginApiResponse>>) => {
+    setAuthData: (state, action: PayloadAction<Partial<AuthState>>) => {
       const { token, user } = action.payload;
       state.token = token || state.token;
       state.user = user || state.user;

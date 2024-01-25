@@ -231,6 +231,16 @@ const injectedRtkApi = api.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    qrCodeControllerCreate: build.mutation<
+      QrCodeControllerCreateApiResponse,
+      QrCodeControllerCreateApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/qrCode`,
+        method: "POST",
+        body: queryArg.createQrCodeDto,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -351,6 +361,11 @@ export type ShiftControllerUpdateApiArg = {
 export type ShiftControllerRemoveApiResponse = unknown;
 export type ShiftControllerRemoveApiArg = {
   id: number;
+};
+export type QrCodeControllerCreateApiResponse =
+  /** status 201 The QRcode scanned */ Qrcode;
+export type QrCodeControllerCreateApiArg = {
+  createQrCodeDto: CreateQrCodeDto;
 };
 export type FileEntity = {
   id: string;
@@ -494,6 +509,18 @@ export type UpdateShiftDto = {
   endTime?: string;
   productionLineId?: number;
 };
+export type Qrcode = {
+  /** The unique identifier of the production line */
+  id: number;
+  /** barcode scan by the system */
+  code: string;
+  /** Scan date of the code */
+  createdAt: string;
+};
+export type CreateQrCodeDto = {
+  /** barcode scan by the system */
+  code: string;
+};
 export const {
   useUsersControllerCreateMutation,
   useUsersControllerFindAllQuery,
@@ -522,4 +549,5 @@ export const {
   useShiftControllerFindOneQuery,
   useShiftControllerUpdateMutation,
   useShiftControllerRemoveMutation,
+  useQrCodeControllerCreateMutation,
 } = injectedRtkApi;
