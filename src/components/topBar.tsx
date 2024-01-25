@@ -29,7 +29,7 @@ export const TopBar: React.FC = () => {
     { type: "text", title: "Code", require: true, key: "code" },
   ];
 
-  const onAddClickHandler = () => {
+  const onScanClickHandler = () => {
     const addModalConfig = getScanConfig();
     dispatch(setModal(<GenericFormModal {...addModalConfig} />));
   };
@@ -47,6 +47,7 @@ export const TopBar: React.FC = () => {
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
         try {
+          console.log(formData)
            await createMutation({ createQrCodeDto: formData }).unwrap();
         } catch (err) {
           throw err;
@@ -75,7 +76,7 @@ export const TopBar: React.FC = () => {
       <div className="flex items-center mr-5">
         <div
           className="flex flex-row items-center h-10 px-10 text-sm font-semibold text-white bg-blue-600 rounded-md shadow-sm cursor-pointer hover:bg-blue-500"
-          onClick={onAddClickHandler}
+          onClick={onScanClickHandler}
         >
           <HiQrcode className="text-xl "></HiQrcode>
           <div>Scan</div>
