@@ -47,7 +47,6 @@ export const TopBar: React.FC = () => {
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
         try {
-          console.log(formData)
            await createMutation({ createQrCodeDto: formData }).unwrap();
         } catch (err) {
           throw err;
