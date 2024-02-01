@@ -47,7 +47,7 @@ export const TopBar: React.FC = () => {
         }
         // value is a Uint8Array.
         console.log(value);
-      
+      }
     }
   }
  
