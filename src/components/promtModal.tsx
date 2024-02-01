@@ -2,6 +2,7 @@ import { removeModal } from "@/redux/UI/modalSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import React, { useMemo } from "react";
 import {
+  HiCheckCircle,
   HiInformationCircle,
   HiPlusCircle,
   HiX,
@@ -39,7 +40,7 @@ const PromptModal: React.FC<PromptModalProps> = ({
       case "success":
         return {
           icon: (
-            <HiPlusCircle className="mx-2 mt-1 text-2xl text-green-500"></HiPlusCircle>
+            <HiCheckCircle className="mx-2 mt-1 text-2xl text-blue-500"></HiCheckCircle>
           ),
         };
 
