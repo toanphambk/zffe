@@ -59,25 +59,25 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
       setIsSuccess(true);
       setError(null);
       dispatch(
-        setModal(
+        setModal(() => (
           <PromptModal
             {...{ type: "success", title: "Sucess", message: sucessMessage }}
           ></PromptModal>
-        )
+        ))
       );
     } catch (error) {
       setIsSuccess(false);
       setError(JSON.stringify(error, null, 2));
       dispatch(
-        setModal(
+        setModal(()=>
           <PromptModal
-          {...{
-            type: "error",
-            title: "Error",
-            data: JSON.stringify(error, null, 2),
-            message: errorMessage,
-          }}
-        ></PromptModal>
+            {...{
+              type: "error",
+              title: "Error",
+              data: JSON.stringify(error, null, 2),
+              message: errorMessage,
+            }}
+          ></PromptModal>
         )
       );
     }

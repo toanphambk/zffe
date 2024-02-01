@@ -12,7 +12,7 @@ const Modal: React.FC = () => {
         <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex items-center justify-center min-h-full p-4 text-center">
-            {childComponent}
+            {childComponent()}
           </div>
         </div>
       </div>

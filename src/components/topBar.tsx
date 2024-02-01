@@ -32,7 +32,7 @@ export const TopBar: React.FC = () => {
 
   const onScanClickHandler = () => {
     const scanConfig = getScanConfig();
-    dispatch(setModal(<GenericFormModal {...scanConfig} />));
+    dispatch(setModal(()=><GenericFormModal {...scanConfig} />));
   };
 
   function getScanConfig(): GenericFormModalProps<Qrcode, any> {
@@ -54,7 +54,7 @@ export const TopBar: React.FC = () => {
           if (response) {
             setTimeout(() => {
               const scanConfig = getScanConfig();
-              dispatch(setModal(<GenericFormModal {...scanConfig} />));
+              dispatch(setModal(() =><GenericFormModal {...scanConfig} />));
             }, 2000);
           }
         } catch (err) {
