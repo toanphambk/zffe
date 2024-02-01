@@ -15,6 +15,7 @@ export interface GenericFormModalProps<FormData, DataType> {
   submitBtnColor: string;
   onSubmit: (params: { formData: FormData; data: DataType }) => Promise<any>;
   onCancel?: () => void;
+  onSucess?: () => Promise<void>;
   fields: FieldConfig<FormData>[];
 }
 
@@ -36,6 +37,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
   errorMessage,
   onSubmit,
   onCancel,
+  onSucess,
   fields,
 }) => {
   const dispatch = useAppDispatch();
@@ -58,6 +60,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
       await onSubmit({ formData, data });
       setIsSuccess(true);
       setError(null);
+      await onSucess?.()
     } catch (error) {
       setIsSuccess(false);
       setError(JSON.stringify(error, null, 2));
@@ -91,6 +94,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
   }
 
   if (isSuccess) {
+
     return (
       <PromptModal
         {...{ type: "success", title: "Sucess", message: sucessMessage }}
