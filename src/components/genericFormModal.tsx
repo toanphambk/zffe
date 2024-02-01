@@ -39,8 +39,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
   fields,
 }) => {
   const dispatch = useAppDispatch();
-  const [error, setError] = useState<null | string>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState<any>(
     formInitData ? formInitData : {}
   );
@@ -56,8 +54,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
     e.preventDefault();
     try {
       await onSubmit({ formData, data });
-      setIsSuccess(true);
-      setError(null);
       dispatch(
         setModal(
           <PromptModal
@@ -66,8 +62,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
         )
       );
     } catch (error) {
-      setIsSuccess(false);
-      setError(JSON.stringify(error, null, 2));
       dispatch(
         setModal(
           <PromptModal
@@ -94,8 +88,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
 
   const removeModalHandler = () => {
     onCancel?.();
-    setIsSuccess(false);
-    setError(null);
     dispatch(removeModal());
   };
 
