@@ -1,11 +1,13 @@
 "use client";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {  useAppSelector } from "@/redux/hooks";
 
 const Modal: React.FC = () => {
   const { isActive, childComponent, renderCount } = useAppSelector(
     (state) => state.modalReducer
   );
 
+  console.log(isActive, childComponent, renderCount);
+  
   if (isActive && renderCount) {
     return (
       <div className="relative z-10">
