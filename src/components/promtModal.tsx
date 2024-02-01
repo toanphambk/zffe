@@ -1,13 +1,7 @@
 import { removeModal } from "@/redux/UI/modalSlice";
 import { useAppDispatch } from "@/redux/hooks";
-import React, { useMemo } from "react";
-import {
-  HiCheckCircle,
-  HiInformationCircle,
-  HiPlusCircle,
-  HiX,
-  HiXCircle,
-} from "react-icons/hi";
+import React, { KeyboardEvent, useMemo } from "react";
+import { HiCheckCircle, HiInformationCircle, HiXCircle } from "react-icons/hi";
 
 export interface PromptModalProps {
   type: "success" | "error" | "info";
@@ -33,6 +27,12 @@ const PromptModal: React.FC<PromptModalProps> = ({
   const removeModalHandler = () => {
     onClose?.();
     dispatch(removeModal());
+  };
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === "Escape") {
+      removeModalHandler();
+    }
   };
 
   const { icon, childComponent } = useMemo((): PromptModalData => {
@@ -73,7 +73,10 @@ const PromptModal: React.FC<PromptModalProps> = ({
   }, [type, data]);
 
   return (
-    <div className="flex flex-col text-black bg-white shadow-xl rounded-xl">
+    <form
+      className="flex flex-col text-black bg-white shadow-xl rounded-xl"
+      onKeyDown={handleKeyPress}
+    >
       <div className="flex flex-row items-center justify-center mt-8">
         {icon}
         <div className="text-2xl font-semibold text-black">{title}</div>
@@ -91,7 +94,7 @@ const PromptModal: React.FC<PromptModalProps> = ({
           Cancel
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
