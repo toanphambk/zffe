@@ -32,7 +32,7 @@ export const TopBar: React.FC = () => {
 
   let test =async ()=>{
     if ("serial" in navigator) {
-      const ports = await navigator.serial.getPorts();
+      const port = await navigator.serial.requestPort({ filters:[] });
       console.log(ports);
       
     }
