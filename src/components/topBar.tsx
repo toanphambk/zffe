@@ -51,6 +51,7 @@ export const TopBar: React.FC = () => {
           let response = await createMutation({
             createQrCodeDto: formData,
           }).unwrap();
+          console.log(response);
           setTimeout(() => {
             const scanConfig = getScanConfig();
             dispatch(setModal(<GenericFormModal {...scanConfig} />));
