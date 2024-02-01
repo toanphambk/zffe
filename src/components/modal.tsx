@@ -2,13 +2,12 @@
 import {  useAppSelector } from "@/redux/hooks";
 
 const Modal: React.FC = () => {
-  const { isActive, childComponent, renderCount } = useAppSelector(
+  const { isActive, childComponent } = useAppSelector(
     (state) => state.modalReducer
   );
 
-  console.log(isActive, childComponent, renderCount);
-  
-  if (isActive && renderCount) {
+
+  if (isActive) {
     return (
       <div className="relative z-10">
         <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>

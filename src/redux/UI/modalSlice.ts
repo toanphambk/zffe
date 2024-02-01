@@ -3,14 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ModalState {
     isActive: boolean;
-    renderCount: number;
     childComponent: React.ReactNode | null;
 }
 
 const initialState: ModalState = {
     isActive: false,
     childComponent: null,
-    renderCount: 0
+
 };
 
 const modalSlice = createSlice({
@@ -21,7 +20,6 @@ const modalSlice = createSlice({
         setModal: (state, action: PayloadAction<React.ReactNode>) => {
             state.childComponent = action.payload;
             state.isActive = true
-            state.renderCount++
         },
     },
 });
