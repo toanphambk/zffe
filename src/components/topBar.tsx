@@ -33,8 +33,7 @@ export const TopBar: React.FC = () => {
   let test =async ()=>{
     if ("serial" in navigator) {
       const port = await navigator.serial.requestPort({ filters:[] });
-      const { usbProductId, usbVendorId } = port.getInfo();
-      console.log(usbProductId,usbVendorId);
+      console.log(port);
       
     }
   }
