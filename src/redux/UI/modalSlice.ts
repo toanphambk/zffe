@@ -17,10 +17,8 @@ const modalSlice = createSlice({
     reducers: {
         removeModal: () => initialState,
         setModal: (state, action: PayloadAction<React.ReactNode>) => {
-            if (!state.isActive) {
-                state.childComponent = action.payload;
-                state.isActive = true
-            }
+            state.childComponent = action.payload;
+            state.isActive = true
         },
     },
 });

@@ -54,7 +54,6 @@ export const TopBar: React.FC = () => {
           if (response) {
             setTimeout(() => {
               const scanConfig = getScanConfig();
-              dispatch(removeModal())
               dispatch(setModal(<GenericFormModal {...scanConfig} />));
             }, 2000);
           }
