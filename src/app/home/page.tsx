@@ -7,7 +7,7 @@ import ShifpLineChart from "../../components/page/home/shipLineChart";
 import ShiftDonutChart from "@/components/page/home/shipDonutChart";
 import ShifpRecordTable from "@/components/page/home/ShifpRecordTable";
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC = () => { 
   return (
     <>
       <div className="flex flex-row w-full">

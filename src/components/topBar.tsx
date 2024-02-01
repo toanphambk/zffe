@@ -9,7 +9,10 @@ import GenericFormModal, {
   FieldConfig,
   GenericFormModalProps,
 } from "./genericFormModal";
-import {  Qrcode, useQrCodeControllerCreateMutation } from "@/redux/services/api";
+import {
+  Qrcode,
+  useQrCodeControllerCreateMutation,
+} from "@/redux/services/api";
 import { setModal } from "@/redux/UI/modalSlice";
 
 export const TopBar: React.FC = () => {
@@ -20,18 +23,17 @@ export const TopBar: React.FC = () => {
 
   const [createMutation] = useQrCodeControllerCreateMutation();
 
-
   const currentPageName =
     activeIndex !== -1 ? menuItems[activeIndex].label : "Unknown Page";
   const currentItem = menuItems[activeIndex];
 
   const fields: FieldConfig<Qrcode>[] = [
-    { type: "text", title: "Code", require: true, key: "code" },
+    { type: "text", title: "Code", require: true, key: "code", focus: true },
   ];
 
   const onScanClickHandler = () => {
-    const addModalConfig = getScanConfig();
-    dispatch(setModal(<GenericFormModal {...addModalConfig} />));
+    const scanConfig = getScanConfig();
+    dispatch(setModal(<GenericFormModal {...scanConfig} />));
   };
 
   function getScanConfig(): GenericFormModalProps<Qrcode, any> {
@@ -47,7 +49,14 @@ export const TopBar: React.FC = () => {
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
         try {
-           await createMutation({ createQrCodeDto: formData }).unwrap();
+          await createMutation({ createQrCodeDto: formData }).unwrap();
+          await new Promise<void>((res)=>{
+            setTimeout(()=>{
+              const scanConfig = getScanConfig();
+              dispatch(setModal(<GenericFormModal {...scanConfig} />));
+              res()
+            },1000)
+          })
         } catch (err) {
           throw err;
         }

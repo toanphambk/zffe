@@ -1,10 +1,9 @@
 // GenericFormModal.tsx
-import React, { useState } from "react";
+import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { removeModal } from "@/redux/UI/modalSlice";
 import { Text, TextInput, Textarea } from "@tremor/react";
 import PromptModal from "./promtModal";
-import TimePicker from "react-time-picker";
 
 export interface GenericFormModalProps<FormData, DataType> {
   icon: React.ReactNode;
@@ -24,6 +23,7 @@ export type FieldConfig<T> = {
   type: "text" | "textarea" | "timePicker";
   require: boolean;
   key: keyof T;
+  focus?: boolean;
 };
 
 const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
@@ -40,13 +40,10 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [error, setError] = useState<null | string>(null);
-  1;
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState<any>(
     formInitData ? formInitData : {}
   );
-
-  const [value, onChange] = useState("10:00");
 
   const inputChangeHandler = (val: any, title: any) => {
     setFormData({
@@ -64,6 +61,12 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
     } catch (error) {
       setIsSuccess(false);
       setError(JSON.stringify(error, null, 2));
+    }
+  };
+
+  const handleEnterOnButton = (event: KeyboardEvent<HTMLFormElement> ) => {
+    if (event.key === "Enter") {
+      submitHandler(event as unknown as FormEvent<HTMLFormElement>);
     }
   };
 
@@ -99,6 +102,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
     <form
       className="flex flex-col bg-white shadow-xl rounded-xl"
       onSubmit={submitHandler}
+      onKeyDown={handleEnterOnButton}
     >
       <div className="flex flex-row items-center justify-center mx-12 mt-8">
         {icon}
@@ -122,6 +126,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
                     onChange={(e) =>
                       inputChangeHandler(e.target.value, field.key)
                     }
+                    autoFocus={field.focus}
                   />
                 );
               case "text":
@@ -134,6 +139,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
                     onChange={(e) =>
                       inputChangeHandler(e.target.value, field.key)
                     }
+                    autoFocus={field.focus}
                   />
                 );
               case "timePicker":
@@ -149,7 +155,8 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
                       onChange={(e) =>
                         inputChangeHandler(e.target.value, field.key)
                       }
-                      required
+                      autoFocus={field.focus}
+                      required={field.require}
                     />
                   </div>
                 );
@@ -158,7 +165,9 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
         </div>
       ))}
 
-      <div className="flex flex-row-reverse items-center px-6 py-3 mt-5 bg-gray-100 rounded-xl">
+      <div
+        className="flex flex-row-reverse items-center px-6 py-3 mt-5 bg-gray-100 rounded-xl"
+      >
         <button
           className="w-20 h-10 ml-2 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           onClick={removeModalHandler}
@@ -168,6 +177,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
         <button
           className={`w-20 h-10 text-sm font-semibold text-white bg-${submitBtnColor}-600 rounded-md shadow-sm  hover:bg-${submitBtnColor}-500`}
           type="submit"
+          value="Submit"
         >
           Confirm
         </button>
