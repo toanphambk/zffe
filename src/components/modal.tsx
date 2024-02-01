@@ -5,7 +5,8 @@ const Modal: React.FC = () => {
   const { isActive, childComponent } = useAppSelector(
     (state) => state.modalReducer
   );
-
+  console.log("child");
+  
   if (isActive) {
     return (
       <div className="relative z-10">
