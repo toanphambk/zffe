@@ -30,6 +30,17 @@ export const TopBar: React.FC = () => {
     { type: "text", title: "Code", require: true, key: "code", focus: true },
   ];
 
+  let test =async ()=>{
+    if ("serial" in navigator) {
+      const ports = await navigator.serial.getPorts();
+      console.log(ports);
+      
+    }
+  }
+
+  test();
+
+  
   const onScanClickHandler = () => {
     const scanConfig = getScanConfig();
     dispatch(setModal(<GenericFormModal {...scanConfig} />));
