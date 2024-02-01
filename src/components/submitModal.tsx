@@ -1,7 +1,7 @@
 // GenericFormModal.tsx
 import React, { useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
-import { removeModal } from "@/redux/UI/modalSlice";
+import { removeModal, setModal } from "@/redux/UI/modalSlice";
 import PromptModal from "./promtModal";
 
 export interface SubmitModalProps<DataType> {
@@ -29,48 +29,38 @@ const SubmitModal: React.FC<SubmitModalProps<any>> = ({
   onCancel,
 }) => {
   const dispatch = useAppDispatch();
-  const [error, setError] = useState<any>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await onSubmit({ data });
-      setIsSuccess(true);
-      setError(null);
+      dispatch(
+        setModal(
+          <PromptModal
+            {...{ type: "success", title: "Sucess", message: sucessMessage }}
+          ></PromptModal>
+        )
+      );
     } catch (error) {
-      setIsSuccess(false);
-      setError(JSON.stringify(error, null, 2));
+      dispatch(
+        setModal(
+          <PromptModal
+            {...{
+              type: "error",
+              title: "Error",
+              data: JSON.stringify(error, null, 2),
+              message: errorMessage,
+            }}
+          ></PromptModal>
+        )
+      );
     }
   };
 
   const removeModalHandler = () => {
     onCancel?.();
-    setIsSuccess(false);
-    setError(false);
     dispatch(removeModal());
   };
-
-  if (error) {
-    return (
-      <PromptModal
-        {...{
-          type: "error",
-          title: "Error",
-          data: JSON.stringify(error, null, 2),
-          message: errorMessage,
-        }}
-      ></PromptModal>
-    );
-  }
-
-  if (isSuccess) {
-    return (
-      <PromptModal
-        {...{ type: "success", title: "Sucess", message: sucessMessage }}
-      ></PromptModal>
-    );
-  }
 
   return (
     <form

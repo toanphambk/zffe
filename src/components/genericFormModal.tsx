@@ -54,8 +54,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
     e.preventDefault();
     try {
       await onSubmit({ formData, data });
-      console.log(formData);
-      
       dispatch(
         setModal(
           <PromptModal

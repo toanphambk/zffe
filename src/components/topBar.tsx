@@ -78,7 +78,9 @@ export const TopBar: React.FC = () => {
           <Text className="font-bold text-gray-500 text-md">
             {user?.role?.name}/
           </Text>
-          <Text className="font-bold text-black text-md">{user?.email}</Text>
+          <Text className="font-bold text-black text-md">
+            {JSON.stringify(user?.email)}
+          </Text>
         </div>
       </div>
       <div className="flex items-center mr-5">
