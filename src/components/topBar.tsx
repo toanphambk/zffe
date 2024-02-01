@@ -49,14 +49,15 @@ export const TopBar: React.FC = () => {
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
         try {
-          await createMutation({ createQrCodeDto: formData }).unwrap();
-          await new Promise<void>((res)=>{
-            setTimeout(()=>{
+          let result = await createMutation({
+            createQrCodeDto: formData,
+          }).unwrap();
+          if (result) {
+            setTimeout(() => {
               const scanConfig = getScanConfig();
               dispatch(setModal(<GenericFormModal {...scanConfig} />));
-              res()
-            },1000)
-          })
+            }, 1000);
+          }
         } catch (err) {
           throw err;
         }
