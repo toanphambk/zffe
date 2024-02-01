@@ -17,7 +17,6 @@ import {
 import SubmitModal, { SubmitModalProps } from "@/components/submitModal";
 import PromptModal, { PromptModalProps } from "@/components/promtModal";
 import { useState } from "react";
-import { setSelectedProductionLine } from "@/redux/UI/settingPageSlice";
 import DataTable from "react-data-table-component";
 import {
   ProductionLine,
