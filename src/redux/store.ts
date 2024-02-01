@@ -9,7 +9,6 @@ import sidebarReducer from "./UI/sideBarSlice";
 import loginReducer from "./UI/loginSlice";
 import modalReducer from "./UI/modalSlice";
 import settingPageReducer from "./UI/settingPageSlice";
-import topbarReducer from "./UI/topBarSlice";
 
 
 //data Slices
@@ -20,7 +19,6 @@ import authReducer from "./data/authSlice";
 import { api } from './services/api';
 
 
-
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   settingPageReducer,
@@ -28,7 +26,6 @@ const rootReducer = combineReducers({
   authReducer,
   loginReducer,
   modalReducer,
-  topbarReducer
 });
 
 const persistConfig = {

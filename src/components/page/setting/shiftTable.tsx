@@ -26,12 +26,6 @@ import {
   useShiftControllerRemoveMutation,
   useShiftControllerUpdateMutation,
 } from "../../../redux/services/api";
-import {
-  useProductionLineControllerCreateMutation,
-  useProductionLineControllerFindAllQuery,
-  useProductionLineControllerRemoveMutation,
-  useProductionLineControllerUpdateMutation,
-} from "@/redux/services/api";
 
 const ShiftTable: React.FC = () => {
   const dispatch = useAppDispatch();
