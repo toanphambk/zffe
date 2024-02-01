@@ -15,7 +15,6 @@ export interface GenericFormModalProps<FormData, DataType> {
   submitBtnColor: string;
   onSubmit: (params: { formData: FormData; data: DataType }) => Promise<any>;
   onCancel?: () => void;
-  onSucess?: () => Promise<void>;
   fields: FieldConfig<FormData>[];
 }
 
@@ -37,7 +36,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
   errorMessage,
   onSubmit,
   onCancel,
-  onSucess,
   fields,
 }) => {
   const dispatch = useAppDispatch();
@@ -60,19 +58,21 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
       await onSubmit({ formData, data });
       setIsSuccess(true);
       setError(null);
-      await onSucess?.()
     } catch (error) {
       setIsSuccess(false);
       setError(JSON.stringify(error, null, 2));
     }
   };
-
-  const handleEnterOnButton = (event: KeyboardEvent<HTMLFormElement> ) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLFormElement>) => {
     if (event.key === "Enter") {
+      event.preventDefault(); // Prevent the form from submitting
       submitHandler(event as unknown as FormEvent<HTMLFormElement>);
     }
+    else if (event.key === "Escape") {
+      removeModalHandler();
+    }
   };
-
+  
   const removeModalHandler = () => {
     onCancel?.();
     setIsSuccess(false);
@@ -94,7 +94,6 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
   }
 
   if (isSuccess) {
-
     return (
       <PromptModal
         {...{ type: "success", title: "Sucess", message: sucessMessage }}
@@ -106,7 +105,7 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
     <form
       className="flex flex-col bg-white shadow-xl rounded-xl"
       onSubmit={submitHandler}
-      onKeyDown={handleEnterOnButton}
+      onKeyDown={handleKeyPress}
     >
       <div className="flex flex-row items-center justify-center mx-12 mt-8">
         {icon}

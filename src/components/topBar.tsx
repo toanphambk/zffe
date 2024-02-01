@@ -55,16 +55,6 @@ export const TopBar: React.FC = () => {
           throw err;
         }
       },
-      onSucess:async ()=>{
-        await new Promise<void> ((res)=>{
-          setTimeout(() => {
-            console.log("asdjlkfhasldjkfh")
-            const scanConfig = getScanConfig();
-            dispatch(setModal(<GenericFormModal {...scanConfig} />));
-            res();
-          }, 2000);
-        })
-      },
       fields,
     };
   }
