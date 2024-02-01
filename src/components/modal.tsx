@@ -2,18 +2,17 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const Modal: React.FC = () => {
-  const { isActive, childComponent } = useAppSelector(
+  const { isActive, childComponent, renderCount } = useAppSelector(
     (state) => state.modalReducer
   );
-  console.log("child");
-  
-  if (isActive) {
+
+  if (isActive && renderCount) {
     return (
       <div className="relative z-10">
         <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex items-center justify-center min-h-full p-4 text-center">
-            {childComponent()}
+            {childComponent}
           </div>
         </div>
       </div>

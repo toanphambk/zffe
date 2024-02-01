@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import React from 'react';
 
 
 interface ModalState {
     isActive: boolean;
-    // childComponent: React.ReactNode | null;
-    childComponent:() => React.ReactNode |null
- }
+    renderCount: number;
+    childComponent: React.ReactNode | null;
+}
 
 const initialState: ModalState = {
     isActive: false,
-    childComponent: () => null
+    childComponent: null,
+    renderCount: 0
 };
 
 const modalSlice = createSlice({
@@ -18,10 +18,12 @@ const modalSlice = createSlice({
     initialState,
     reducers: {
         removeModal: () => initialState,
-        setModal: (state, action: PayloadAction<() =>React.ReactNode>) => {
-            state.childComponent = action.payload;
-            state.isActive = true
-
+        setModal: (state, action: PayloadAction<React.ReactNode>) => {
+            if (!state.isActive) {
+                state.childComponent = action.payload;
+                state.isActive = true
+                state.renderCount++
+            }
         },
     },
 });
