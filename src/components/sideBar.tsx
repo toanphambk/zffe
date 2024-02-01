@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Card, Text, Divider } from "@tremor/react";
 import { HiChartBar } from "react-icons/hi";
-import { menuItems, SetSiebarActiveIndex } from "@/redux/UI/sideBarSlice";
+import { menuItems, SetSidebarActiveIndex } from "@/redux/UI/sideBarSlice";
 
 const SideBar: React.FC = () => {
   const dispatch = useAppDispatch();

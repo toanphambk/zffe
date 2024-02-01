@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { HiAdjustments, HiHome, HiLogout, HiUser } from "react-icons/hi";
 
 interface SidebarState {
@@ -18,7 +18,7 @@ const sidebarSlice = createSlice({
     name: 'sidebar',
     initialState,
     reducers: {
-        SetSiebarActiveIndex: (state,actions) => {
+        SetSidebarActiveIndex: (state,actions) => {
             state.activeIndex = menuItems.findIndex(item => item.link == actions.payload);
         },
     },
@@ -34,5 +34,5 @@ export const menuItems: MenuItem[] = [
 ]
 
 
-export const { SetSiebarActiveIndex } = sidebarSlice.actions;
+export const {  SetSidebarActiveIndex } = sidebarSlice.actions;
 export default sidebarSlice.reducer;

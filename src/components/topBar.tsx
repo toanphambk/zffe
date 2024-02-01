@@ -13,7 +13,7 @@ import {
   Qrcode,
   useQrCodeControllerCreateMutation,
 } from "@/redux/services/api";
-import { setModal } from "@/redux/UI/modalSlice";
+import { removeModal, setModal } from "@/redux/UI/modalSlice";
 
 export const TopBar: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -48,9 +48,16 @@ export const TopBar: React.FC = () => {
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
         try {
-          await createMutation({
+          let response = await createMutation({
             createQrCodeDto: formData,
           }).unwrap();
+          if (response) {
+            setTimeout(() => {
+              const scanConfig = getScanConfig();
+              dispatch(removeModal())
+              dispatch(setModal(<GenericFormModal {...scanConfig} />));
+            }, 2000);
+          }
         } catch (err) {
           throw err;
         }

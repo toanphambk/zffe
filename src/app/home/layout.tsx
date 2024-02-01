@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Modal from "@/components/modal";
 import { useEffect } from "react";
 import { useAuthControllerMeQuery } from "@/redux/services/api";
-import { SetSiebarActiveIndex } from "@/redux/UI/sideBarSlice";
+import { SetSidebarActiveIndex } from "@/redux/UI/sideBarSlice";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +26,7 @@ export default function HomeLayout({
   console.log("reload");
   
   useEffect(() => {
-    dispatch(SetSiebarActiveIndex(pathName));
+    dispatch(SetSidebarActiveIndex(pathName));
   }, [pathName,dispatch]);
 
   if (isError) {

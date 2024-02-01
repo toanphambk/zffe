@@ -1,7 +1,7 @@
 // GenericFormModal.tsx
 import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
-import { removeModal, setModal } from "@/redux/UI/modalSlice";
+import { removeModal } from "@/redux/UI/modalSlice";
 import { Text, TextInput, Textarea } from "@tremor/react";
 import PromptModal from "./promtModal";
 
@@ -58,40 +58,22 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
       await onSubmit({ formData, data });
       setIsSuccess(true);
       setError(null);
-      dispatch(
-        setModal(
-          <PromptModal
-            {...{ type: "success", title: "Sucess", message: sucessMessage }}
-          ></PromptModal>
-        )
-      );
     } catch (error) {
       setIsSuccess(false);
       setError(JSON.stringify(error, null, 2));
-      dispatch(
-        setModal(
-          <PromptModal
-            {...{
-              type: "error",
-              title: "Error",
-              data: JSON.stringify(error, null, 2),
-              message: errorMessage,
-            }}
-          ></PromptModal>
-        )
-      );
     }
   };
-
+  
   const handleKeyPress = (event: KeyboardEvent<HTMLFormElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       submitHandler(event as unknown as FormEvent<HTMLFormElement>);
-    } else if (event.key === "Escape") {
+    }
+    else if (event.key === "Escape") {
       removeModalHandler();
     }
   };
-
+  
   const removeModalHandler = () => {
     onCancel?.();
     setIsSuccess(false);
@@ -99,26 +81,26 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
     dispatch(removeModal());
   };
 
-  // if (error) {
-  //   return (
-  //     <PromptModal
-  //       {...{
-  //         type: "error",
-  //         title: "Error",
-  //         data: error,
-  //         message: errorMessage,
-  //       }}
-  //     ></PromptModal>
-  //   );
-  // }
+  if (error) {
+    return (
+      <PromptModal
+        {...{
+          type: "error",
+          title: "Error",
+          data: error,
+          message: errorMessage,
+        }}
+      ></PromptModal>
+    );
+  }
 
-  // if (isSuccess) {
-  //   return (
-  //     <PromptModal
-  //       {...{ type: "success", title: "Sucess", message: sucessMessage }}
-  //     ></PromptModal>
-  //   );
-  // }
+  if (isSuccess) {
+    return (
+      <PromptModal
+        {...{ type: "success", title: "Sucess", message: sucessMessage }}
+      ></PromptModal>
+    );
+  }
 
   return (
     <form
@@ -187,7 +169,9 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
         </div>
       ))}
 
-      <div className="flex flex-row-reverse items-center px-6 py-3 mt-5 bg-gray-100 rounded-xl">
+      <div
+        className="flex flex-row-reverse items-center px-6 py-3 mt-5 bg-gray-100 rounded-xl"
+      >
         <button
           className="w-20 h-10 ml-2 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
           onClick={removeModalHandler}
