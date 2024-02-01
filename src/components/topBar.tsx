@@ -20,7 +20,6 @@ export const TopBar: React.FC = () => {
 
   const { activeIndex } = useAppSelector((state) => state.sidebarReducer);
   const { user } = useAppSelector((state) => state.authReducer);
-
   const [createMutation] = useQrCodeControllerCreateMutation();
 
   const currentPageName =
@@ -53,7 +52,9 @@ export const TopBar: React.FC = () => {
             createQrCodeDto: formData,
           }).unwrap()
           if (response) {
+          console.log("response",response);
             setTimeout(() => {
+              console.log("response",response);
               const scanConfig = getScanConfig();
               dispatch(setModal(<GenericFormModal {...scanConfig} />));
             }, 1000);
