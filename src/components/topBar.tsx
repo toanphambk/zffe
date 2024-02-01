@@ -37,10 +37,7 @@ export const TopBar: React.FC = () => {
       
     }
   }
-
-  test();
-
-  
+ 
   const onScanClickHandler = () => {
     const scanConfig = getScanConfig();
     dispatch(setModal(<GenericFormModal {...scanConfig} />));
