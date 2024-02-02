@@ -112,14 +112,6 @@ export const TopBar: React.FC = () => {
           <HiQrcode className="text-xl "></HiQrcode>
           <div>Scan</div>
         </div>
-        <div
-          className="flex flex-row items-center h-10 px-10 text-sm font-semibold text-white bg-blue-600 rounded-md shadow-sm cursor-pointer hover:bg-blue-500"
-          onClick={test}
-        >
-          <HiQrcode className="text-xl "></HiQrcode>
-          <div>Scan</div>
-        </div>
-
         {/* <TextInput icon={HiSearch} placeholder="Search..." /> */}
         <HiBell className="ml-5 text-2xl text-blue-500 hover:cursor-pointer" />
         <Link href={"/login"}>
