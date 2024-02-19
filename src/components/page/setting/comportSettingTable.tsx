@@ -186,7 +186,6 @@ const ComportSettingTable: React.FC = () => {
       try {
         const ports = await navigator.serial.getPorts();
         ports.forEach((port) => console.log("port avaiable:", port.getInfo()));
-        const qrCode = ports.filter((port) => port.getInfo());
         const { device } = portSettingRow;
         const selectedPort = await navigator.serial.requestPort({
           filters: [],
@@ -206,7 +205,6 @@ const ComportSettingTable: React.FC = () => {
         );
       } catch (err) {
         console.log(err);
-
         showErrorModal("Failed to Setting Port.", err);
       }
     } else {

@@ -30,9 +30,9 @@ export default function HomeLayout({
     (state) => state.portsSettingReducer.rfid
   );
 
-  const [rfidService] = useState(() => new SerialPortService(
-    "rfid", store, dispatch
-  ))
+  const [rfidService] = useState(
+    () => new SerialPortService("rfid", store, dispatch)
+  );
 
   useEffect(() => {
     rfidService.openPort();
