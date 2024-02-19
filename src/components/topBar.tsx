@@ -30,27 +30,6 @@ export const TopBar: React.FC = () => {
     { type: "text", title: "Code", require: true, key: "code", focus: true },
   ];
 
-  let test =async ()=>{
-    if ("serial" in navigator) {
-      const port = await navigator.serial.requestPort({ filters:[] });
-      console.log(port);
-      await port.open({ baudRate: 9600 });
-      const reader = port.readable.getReader();
-
-      // Listen to data coming from the serial device.
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          // Allow the serial port to be closed later.
-          reader.releaseLock();
-          break;
-        }
-        // value is a Uint8Array.
-        console.log(value);
-      }
-    }
-  }
- 
   const onScanClickHandler = () => {
     const scanConfig = getScanConfig();
     dispatch(setModal(<GenericFormModal {...scanConfig} />));

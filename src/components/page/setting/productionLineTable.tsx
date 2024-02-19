@@ -5,7 +5,7 @@ import GenericFormModal, {
 } from "@/components/genericFormModal";
 import { setModal } from "@/redux/UI/modalSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Text, Card, Title } from "@tremor/react";
+import { Text, Card, Title, Button } from "@tremor/react";
 import {
   HiPencil,
   HiPlus,
@@ -18,10 +18,7 @@ import SubmitModal, { SubmitModalProps } from "@/components/submitModal";
 import PromptModal, { PromptModalProps } from "@/components/promtModal";
 import { useState } from "react";
 import { setSelectedProductionLine } from "@/redux/UI/settingPageSlice";
-import DataTable, {
-  ConditionalStyles,
-  TableStyles,
-} from "react-data-table-component";
+import DataTable from "react-data-table-component";
 
 import {
   ProductionLine,
@@ -78,7 +75,7 @@ const ProductionLineTable: React.FC = () => {
     },
     {
       name: "Actions",
-      button: true,
+      right: true,
       cell: (row: ProductionLine) => (
         <>
           <HiPencil
@@ -98,11 +95,13 @@ const ProductionLineTable: React.FC = () => {
   const conditionalRowStyles = [
     {
       when: (row: ProductionLine) => row.id === selectedProductionLine?.id,
-      classNames:["bg-blue-400 text-white hover:cursor-pointer font-semibold"]
+      classNames: ["bg-blue-400 text-white hover:cursor-pointer font-semibold"],
     },
     {
       when: (row: ProductionLine) => row.id !== selectedProductionLine?.id,
-      classNames:["bg-white text-black hover:bg-blue-200 hover:cursor-pointer font-semibold"]
+      classNames: [
+        "bg-white text-black hover:bg-blue-200 hover:cursor-pointer font-semibold",
+      ],
     },
   ];
 
@@ -282,8 +281,6 @@ const ProductionLineTable: React.FC = () => {
         <div className="flex items-center">
           <Title>Line Table</Title>
           <HiRefresh
-            key="reloadDataBtn"
-            type="button"
             onClick={onReloadClickHandler}
             className="p-1 mx-5 text-2xl font-bold text-white bg-blue-900 rounded-full hover:cursor-pointer hover:bg-blue-700 "
           ></HiRefresh>
@@ -296,7 +293,6 @@ const ProductionLineTable: React.FC = () => {
       </div>
 
       <DataTable
-        className="font-semibold"
         columns={columns}
         data={categories ? categories : []}
         conditionalRowStyles={conditionalRowStyles}

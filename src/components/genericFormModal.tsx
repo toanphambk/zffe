@@ -2,7 +2,14 @@
 import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { removeModal, setModal } from "@/redux/UI/modalSlice";
-import { Text, TextInput, Textarea } from "@tremor/react";
+import {
+  NumberInput,
+  Select,
+  SelectItem,
+  Text,
+  TextInput,
+  Textarea,
+} from "@tremor/react";
 import PromptModal from "./promtModal";
 
 export interface GenericFormModalProps<FormData, DataType> {
@@ -20,10 +27,11 @@ export interface GenericFormModalProps<FormData, DataType> {
 
 export type FieldConfig<T> = {
   title: string;
-  type: "text" | "textarea" | "timePicker";
+  type: "text" | "textarea" | "timePicker" | "number" | "select";
   require: boolean;
   key: keyof T;
   focus?: boolean;
+  options?: Array<{ label: string; value: string | number }>;
 };
 
 const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
@@ -65,13 +73,13 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
       dispatch(
         setModal(
           <PromptModal
-          {...{
-            type: "error",
-            title: "Error",
-            data: JSON.stringify(error, null, 2),
-            message: errorMessage,
-          }}
-        ></PromptModal>
+            {...{
+              type: "error",
+              title: "Error",
+              data: JSON.stringify(error, null, 2),
+              message: errorMessage,
+            }}
+          ></PromptModal>
         )
       );
     }
@@ -152,6 +160,35 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
                       required={field.require}
                     />
                   </div>
+                );
+              case "number":
+                return (
+                  <NumberInput
+                    className="w-full text-sm text-gray-900 rounded-md shadow-sm ring-1 focus:outline-none ring-gray-200 focus:ring-gray-200 focus:ring-1 placeholder:text-gray-500"
+                    placeholder={field.title}
+                    required={field.require}
+                    value={formData[field.key] || 0}
+                    onChange={(e) =>
+                      inputChangeHandler(e.target.value, field.key)
+                    }
+                    autoFocus={field.focus}
+                  />
+                );
+              case "select":
+                return (
+                  <Select
+                    value={formData[field.key]}
+                    onValueChange={(val) => inputChangeHandler(val, field.key)}
+                    placeholder={formData[field.key]}
+                    autoFocus={field.focus}
+                    aria-label={field.title}
+                  >
+                    {field.options?.map((option, index) => (
+                      <SelectItem key={index} value={option.value.toString()}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
                 );
             }
           })()}

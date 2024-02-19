@@ -13,11 +13,11 @@ import settingPageReducer from "./UI/settingPageSlice";
 
 //data Slices
 import authReducer from "./data/authSlice";
+import portsSettingReducer from "./data/portsSettingSlice"
+import serialPortStateReducer from './data/serialPortStateSlice';
 
 //Api middleware
-
 import { api } from './services/api';
-
 
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
@@ -26,12 +26,14 @@ const rootReducer = combineReducers({
   authReducer,
   loginReducer,
   modalReducer,
+  portsSettingReducer,
+  serialPortStateReducer
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: [api.reducerPath, 'modalReducer', "settingPageReducer"],
+  blacklist: [api.reducerPath, 'modalReducer', "settingPageReducer", "serialPortStateReducer"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

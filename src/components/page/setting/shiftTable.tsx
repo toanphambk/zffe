@@ -36,7 +36,7 @@ const ShiftTable: React.FC = () => {
 
   const {
     refetch: getAllQuery,
-    data: categories,
+    data: shift,
     isSuccess,
   } = useShiftControllerFindAllQuery(
     selectedProductionLine ? { id: selectedProductionLine.id } : {},
@@ -51,7 +51,7 @@ const ShiftTable: React.FC = () => {
   const [isDisplay, setDisplay] = useState(true);
 
   const columns = [
-    {
+    { 
       name: "Shift Name",
       selector: (row: Shift) => row.shiftName,
     },
@@ -65,7 +65,7 @@ const ShiftTable: React.FC = () => {
     },
     {
       name: "Actions",
-      button: true,
+      right: true,
       cell: (row: Shift) => (
         <>
           <HiPencil
@@ -82,11 +82,11 @@ const ShiftTable: React.FC = () => {
     },
   ];
 
-  const customStyles = [
+  const conditionalRowStyles = [
     {
-      when: (row: ProductionLine) => row.id,
+      when: () => true,
       classNames: [
-        "bg-white text-black hover:bg-blue-200 hover:cursor-pointer ",
+        "bg-white text-black hover:bg-blue-200 hover:cursor-pointer font-semibold",
       ],
     },
   ];
@@ -265,7 +265,6 @@ const ShiftTable: React.FC = () => {
         <div className="flex items-center">
           <Title>Shift Table</Title>
           <HiRefresh
-            key="reloadDataBtn"
             type="button"
             onClick={onReloadClickHandler}
             className="p-1 mx-5 text-2xl font-bold text-white bg-blue-900 rounded-full hover:cursor-pointer hover:bg-blue-700 "
@@ -281,8 +280,8 @@ const ShiftTable: React.FC = () => {
       <DataTable
         className="font-semibold"
         columns={columns}
-        data={categories ? categories : []}
-        conditionalRowStyles={customStyles}
+        conditionalRowStyles={conditionalRowStyles}
+        data={shift ? shift : []}
         onRowClicked={onRowClicked}
       />
     </Card>
