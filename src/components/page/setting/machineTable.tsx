@@ -16,68 +16,68 @@ import {
 } from "react-icons/hi";
 import SubmitModal, { SubmitModalProps } from "@/components/submitModal";
 import PromptModal, { PromptModalProps } from "@/components/promtModal";
-import { useState } from "react";
-import { setSelectedProductionLine } from "@/redux/UI/settingPageSlice";
+import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 
 import {
-  ProductionLine,
-  useProductionLineControllerCreateMutation,
-  useProductionLineControllerFindAllQuery,
-  useProductionLineControllerRemoveMutation,
-  useProductionLineControllerUpdateMutation,
+  Machine,
+  useMachineControllerCreateMutation,
+  useMachineControllerFindAllQuery,
+  useMachineControllerRemoveMutation,
+  useMachineControllerUpdateMutation,
 } from "@/redux/services/api";
+import { setAppSettingMachine } from "@/redux/data/appSettingSlice";
 
-const ProductionLineTable: React.FC = () => {
+const MachineTable: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const { selectedProductionLine } = useAppSelector(
-    (state) => state.settingPageReducer
+  const { machine: settingMachine } = useAppSelector(
+    (state) => state.appSettingReducer
   );
 
   const {
     refetch: getAllQuery,
-    data: categories,
-    isSuccess,
-  } = useProductionLineControllerFindAllQuery(undefined, {
+    data: machine,
+    status,
+  } = useMachineControllerFindAllQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
-  const [createMutation] = useProductionLineControllerCreateMutation();
-  const [updateMutation] = useProductionLineControllerUpdateMutation();
-  const [deleteMutation] = useProductionLineControllerRemoveMutation();
+  const [createMutation] = useMachineControllerCreateMutation();
+  const [updateMutation] = useMachineControllerUpdateMutation();
+  const [deleteMutation] = useMachineControllerRemoveMutation();
   const [isDisplay, setDisplay] = useState(true);
 
   const columns = [
     {
       name: "System ID",
-      selector: (row: ProductionLine) => row.systemID,
+      selector: (row: Machine) => row.systemID,
     },
     {
       name: "Line ID",
-      selector: (row: ProductionLine) => row.lineID,
+      selector: (row: Machine) => row.lineID,
     },
     {
       name: "Station Name",
-      selector: (row: ProductionLine) => row.stationName,
+      selector: (row: Machine) => row.stationName,
     },
     {
       name: "Station ID",
-      selector: (row: ProductionLine) => row.stationID,
+      selector: (row: Machine) => row.stationID,
     },
     {
       name: "Description",
-      selector: (row: ProductionLine) => row.description,
+      selector: (row: Machine) => row.description,
     },
     {
       name: "IP Address",
-      selector: (row: ProductionLine) => row.ipAddress,
+      selector: (row: Machine) => row.ip,
     },
     {
       name: "Actions",
       right: true,
-      cell: (row: ProductionLine) => (
-        <>
+      cell: (row: Machine) => (
+        <>\
           <HiPencil
             className="p-1 mx-2 text-2xl text-white bg-blue-600 rounded-full"
             onClick={() => onEditClickHandler(row)}
@@ -94,26 +94,32 @@ const ProductionLineTable: React.FC = () => {
 
   const conditionalRowStyles = [
     {
-      when: (row: ProductionLine) => row.id === selectedProductionLine?.id,
-      classNames: ["bg-blue-400 text-white hover:cursor-pointer font-semibold"],
+      when: (row: Machine) => row.id === settingMachine?.id,
+      classNames: [
+        "bg-blue-500 text-white hover:bg-blue-200 hover:cursor-pointer font-semibold",
+      ],
     },
     {
-      when: (row: ProductionLine) => row.id !== selectedProductionLine?.id,
+      when: (row: Machine) => row.id !== settingMachine?.id,
       classNames: [
         "bg-white text-black hover:bg-blue-200 hover:cursor-pointer font-semibold",
       ],
     },
   ];
 
-  const fields: FieldConfig<ProductionLine>[] = [
-    { type: "text", title: "ID", require: true, key: "id" },
+  const fields: FieldConfig<Machine>[] = [
     {
       type: "text",
       title: "System ID",
       require: true,
       key: "systemID",
     },
-    { type: "text", title: "Line ID", require: true, key: "lineID" },
+    {
+      type: "text",
+      title: "Line ID",
+      require: true,
+      key: "lineID"
+    },
     {
       type: "text",
       title: "Station Name",
@@ -136,24 +142,24 @@ const ProductionLineTable: React.FC = () => {
       type: "text",
       title: "IP Address",
       require: true,
-      key: "ipAddress",
+      key: "ip",
     },
   ];
 
-  function getAddModalConfig(): GenericFormModalProps<ProductionLine, any> {
+  function getAddModalConfig(): GenericFormModalProps<Machine, any> {
     const icon = (
       <HiPlusCircle className="mt-1 mr-5 text-3xl text-green-500"></HiPlusCircle>
     );
 
     return {
       icon,
-      title: "Add Production Line",
+      title: "Add machine",
       sucessMessage: "Added Done",
       errorMessage: "Added Fail",
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
         try {
-          await createMutation({ createProductionLineDto: formData }).unwrap();
+          await createMutation({ createMachineDto: formData }).unwrap();
           getAllQuery();
         } catch (err) {
           throw err;
@@ -164,8 +170,8 @@ const ProductionLineTable: React.FC = () => {
   }
 
   function getEditModalConfig(
-    initData: ProductionLine
-  ): GenericFormModalProps<ProductionLine, number> {
+    initData: Machine
+  ): GenericFormModalProps<Machine, number> {
     const icon = (
       <div className="mr-2 text-white bg-blue-600 rounded-full cursor-pointer hover:bg-blue-500">
         <HiPencil className="m-1 text-lg"></HiPencil>
@@ -174,7 +180,7 @@ const ProductionLineTable: React.FC = () => {
 
     return {
       icon,
-      title: `Edit Production Line No ${initData.id}`,
+      title: `Edit machine No ${initData.id}`,
       sucessMessage: "Edit Done",
       errorMessage: "Edit Fail",
       submitBtnColor: "blue",
@@ -183,9 +189,12 @@ const ProductionLineTable: React.FC = () => {
         try {
           await updateMutation({
             id: formData.id.toString(),
-            updateProductionLineDto: formData,
+            updateMachineDto: formData,
           }).unwrap();
           getAllQuery();
+          if (settingMachine?.id === formData.id) {
+            dispatch(setAppSettingMachine(formData));
+          }
         } catch (err) {
           throw err;
         }
@@ -195,8 +204,8 @@ const ProductionLineTable: React.FC = () => {
   }
 
   function getDeleteModalConfig(
-    item: ProductionLine
-  ): SubmitModalProps<ProductionLine> {
+    item: Machine
+  ): SubmitModalProps<Machine> {
     const icon = (
       <HiXCircle className="mt-1 mr-5 text-3xl text-red-500"></HiXCircle>
     );
@@ -219,7 +228,7 @@ const ProductionLineTable: React.FC = () => {
     return {
       icon,
       childComponent,
-      title: "Delete Production Line",
+      title: "Delete machine",
       sucessMessage: "Success Delete",
       errorMessage: "Fail Delete",
       data: item,
@@ -227,6 +236,9 @@ const ProductionLineTable: React.FC = () => {
       onSubmit: async ({ data }) => {
         try {
           await deleteMutation({ id: data.id.toString() }).unwrap();
+          if (settingMachine?.id === data.id) {
+            dispatch(setAppSettingMachine(undefined));
+          }
           getAllQuery();
         } catch (err) {
           throw err;
@@ -240,17 +252,13 @@ const ProductionLineTable: React.FC = () => {
     dispatch(setModal(<GenericFormModal {...addModalConfig} />));
   };
 
-  const onEditClickHandler = (item: ProductionLine) => {
+  const onEditClickHandler = (item: Machine) => {
     const editModalConfig = getEditModalConfig(item);
     dispatch(setModal(<GenericFormModal {...editModalConfig} />));
   };
-  const onDeleteClickHandler = (item: ProductionLine) => {
+  const onDeleteClickHandler = (item: Machine) => {
     const deleteModalConfig = getDeleteModalConfig(item);
     dispatch(setModal(<SubmitModal {...deleteModalConfig} />));
-  };
-
-  const onSelectClickHandler = (item: ProductionLine) => {
-    dispatch(setSelectedProductionLine(item));
   };
 
   const onDisplayToggle = async () => {
@@ -259,7 +267,7 @@ const ProductionLineTable: React.FC = () => {
 
   const onReloadClickHandler = async () => {
     try {
-      await getAllQuery().unwrap();
+      const data = await getAllQuery().unwrap();
     } catch (err) {
       const errorModalConfig: PromptModalProps = {
         type: "error",
@@ -271,35 +279,37 @@ const ProductionLineTable: React.FC = () => {
     }
   };
 
-  const onRowClicked = (row: ProductionLine) => {
-    dispatch(setSelectedProductionLine(row));
+  const onRowClicked = (row: Machine) => {
+    dispatch(setAppSettingMachine(row));
   };
 
   return (
-    <Card className="flex flex-col w-full my-4">
-      <div className="flex flex-row justify-between w-full">
-        <div className="flex items-center">
-          <Title>Line Table</Title>
-          <HiRefresh
-            onClick={onReloadClickHandler}
-            className="p-1 mx-5 text-2xl font-bold text-white bg-blue-900 rounded-full hover:cursor-pointer hover:bg-blue-700 "
-          ></HiRefresh>
+    <>
+      <Card className="flex flex-col w-full my-4">
+        <div className="flex flex-row justify-between w-full">
+          <div className="flex items-center">
+            <Title>Edit Machine Setting</Title>
+            <HiRefresh
+              onClick={onReloadClickHandler}
+              className="p-1 mx-5 text-2xl font-bold text-white bg-blue-900 rounded-full hover:cursor-pointer hover:bg-blue-700 "
+            ></HiRefresh>
+          </div>
+
+          <HiPlus
+            className="p-1 mx-2 text-2xl text-white bg-green-500 rounded-full cursor-pointer"
+            onClick={onAddClickHandler}
+          ></HiPlus>
         </div>
 
-        <HiPlus
-          className="p-1 mx-2 text-2xl text-white bg-green-500 rounded-full cursor-pointer"
-          onClick={onAddClickHandler}
-        ></HiPlus>
-      </div>
-
-      <DataTable
-        columns={columns}
-        data={categories ? categories : []}
-        conditionalRowStyles={conditionalRowStyles}
-        onRowClicked={onRowClicked}
-      />
-    </Card>
+        <DataTable
+          columns={columns}
+          data={machine ? machine : []}
+          conditionalRowStyles={conditionalRowStyles}
+          onRowClicked={onRowClicked}
+        />
+      </Card>
+    </>
   );
 };
 
-export default ProductionLineTable;
+export default MachineTable;

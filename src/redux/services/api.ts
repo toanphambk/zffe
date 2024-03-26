@@ -149,44 +149,44 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: () => ({ url: `/` }),
     }),
-    productionLineControllerCreate: build.mutation<
-      ProductionLineControllerCreateApiResponse,
-      ProductionLineControllerCreateApiArg
+    machineControllerCreate: build.mutation<
+      MachineControllerCreateApiResponse,
+      MachineControllerCreateApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/production-line`,
+        url: `/api/machine`,
         method: "POST",
-        body: queryArg.createProductionLineDto,
+        body: queryArg.createMachineDto,
       }),
     }),
-    productionLineControllerFindAll: build.query<
-      ProductionLineControllerFindAllApiResponse,
-      ProductionLineControllerFindAllApiArg
+    machineControllerFindAll: build.query<
+      MachineControllerFindAllApiResponse,
+      MachineControllerFindAllApiArg
     >({
-      query: () => ({ url: `/api/production-line` }),
+      query: () => ({ url: `/api/machine` }),
     }),
-    productionLineControllerFindOne: build.query<
-      ProductionLineControllerFindOneApiResponse,
-      ProductionLineControllerFindOneApiArg
+    machineControllerFindOne: build.query<
+      MachineControllerFindOneApiResponse,
+      MachineControllerFindOneApiArg
     >({
-      query: (queryArg) => ({ url: `/api/production-line/${queryArg.id}` }),
+      query: (queryArg) => ({ url: `/api/machine/${queryArg.id}` }),
     }),
-    productionLineControllerUpdate: build.mutation<
-      ProductionLineControllerUpdateApiResponse,
-      ProductionLineControllerUpdateApiArg
+    machineControllerUpdate: build.mutation<
+      MachineControllerUpdateApiResponse,
+      MachineControllerUpdateApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/production-line/${queryArg.id}`,
+        url: `/api/machine/${queryArg.id}`,
         method: "PATCH",
-        body: queryArg.updateProductionLineDto,
+        body: queryArg.updateMachineDto,
       }),
     }),
-    productionLineControllerRemove: build.mutation<
-      ProductionLineControllerRemoveApiResponse,
-      ProductionLineControllerRemoveApiArg
+    machineControllerRemove: build.mutation<
+      MachineControllerRemoveApiResponse,
+      MachineControllerRemoveApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/production-line/${queryArg.id}`,
+        url: `/api/machine/${queryArg.id}`,
         method: "DELETE",
       }),
     }),
@@ -231,14 +231,67 @@ const injectedRtkApi = api.injectEndpoints({
         method: "DELETE",
       }),
     }),
-    qrCodeControllerCreate: build.mutation<
-      QrCodeControllerCreateApiResponse,
-      QrCodeControllerCreateApiArg
+    hardwareActionControllerCreateQrCode: build.mutation<
+      HardwareActionControllerCreateQrCodeApiResponse,
+      HardwareActionControllerCreateQrCodeApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/qrCode`,
+        url: `/api/qrCode/createQrCode`,
         method: "POST",
         body: queryArg.createQrCodeDto,
+      }),
+    }),
+    hardwareActionControllerCreateRfid: build.mutation<
+      HardwareActionControllerCreateRfidApiResponse,
+      HardwareActionControllerCreateRfidApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/qrCode/createRFID`,
+        method: "POST",
+        body: queryArg.createRfidDto,
+      }),
+    }),
+    mesControllerFindAllRecord: build.query<
+      MesControllerFindAllRecordApiResponse,
+      MesControllerFindAllRecordApiArg
+    >({
+      query: () => ({ url: `/api/mes` }),
+    }),
+    mesControllerFindAllRecordByMachineAndDateTime: build.query<
+      MesControllerFindAllRecordByMachineAndDateTimeApiResponse,
+      MesControllerFindAllRecordByMachineAndDateTimeApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/mes/machineDateTime`,
+        params: {
+          machineId: queryArg.machineId,
+          startTime: queryArg.startTime,
+          endTime: queryArg.endTime,
+        },
+      }),
+    }),
+    mesControllerGetDailyLineChartData: build.query<
+      MesControllerGetDailyLineChartDataApiResponse,
+      MesControllerGetDailyLineChartDataApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/mes/dailyLineChartData`,
+        params: { machineId: queryArg.machineId, time: queryArg.time },
+      }),
+    }),
+    mesControllerFindOneRecord: build.query<
+      MesControllerFindOneRecordApiResponse,
+      MesControllerFindOneRecordApiArg
+    >({
+      query: (queryArg) => ({ url: `/api/mes/${queryArg.moduleSerialNo}` }),
+    }),
+    monitorServiceManagerControllerGetMachineState: build.query<
+      MonitorServiceManagerControllerGetMachineStateApiResponse,
+      MonitorServiceManagerControllerGetMachineStateApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/monitor`,
+        params: { machineId: queryArg.machineId },
       }),
     }),
   }),
@@ -313,27 +366,27 @@ export type AuthControllerDeleteApiResponse = unknown;
 export type AuthControllerDeleteApiArg = void;
 export type HomeControllerAppInfoApiResponse = unknown;
 export type HomeControllerAppInfoApiArg = void;
-export type ProductionLineControllerCreateApiResponse =
-  /** status 201 The production line has been successfully created. */ ProductionLine;
-export type ProductionLineControllerCreateApiArg = {
-  createProductionLineDto: CreateProductionLineDto;
+export type MachineControllerCreateApiResponse =
+  /** status 201 The machine has been successfully created. */ Machine;
+export type MachineControllerCreateApiArg = {
+  createMachineDto: CreateMachineDto;
 };
-export type ProductionLineControllerFindAllApiResponse =
-  /** status 200 Array of production lines retrieved successfully. */ ProductionLine[];
-export type ProductionLineControllerFindAllApiArg = void;
-export type ProductionLineControllerFindOneApiResponse =
-  /** status 200 Single production line retrieved successfully. */ ProductionLine;
-export type ProductionLineControllerFindOneApiArg = {
+export type MachineControllerFindAllApiResponse =
+  /** status 200 Array of machines retrieved successfully. */ Machine[];
+export type MachineControllerFindAllApiArg = void;
+export type MachineControllerFindOneApiResponse =
+  /** status 200 Single machine retrieved successfully. */ Machine;
+export type MachineControllerFindOneApiArg = {
   id: string;
 };
-export type ProductionLineControllerUpdateApiResponse =
-  /** status 200 The production line has been successfully updated. */ ProductionLine;
-export type ProductionLineControllerUpdateApiArg = {
+export type MachineControllerUpdateApiResponse =
+  /** status 200 The machine has been successfully updated. */ Machine;
+export type MachineControllerUpdateApiArg = {
   id: string;
-  updateProductionLineDto: UpdateProductionLineDto;
+  updateMachineDto: UpdateMachineDto;
 };
-export type ProductionLineControllerRemoveApiResponse = unknown;
-export type ProductionLineControllerRemoveApiArg = {
+export type MachineControllerRemoveApiResponse = unknown;
+export type MachineControllerRemoveApiArg = {
   id: string;
 };
 export type ShiftControllerCreateApiResponse =
@@ -344,7 +397,7 @@ export type ShiftControllerCreateApiArg = {
 export type ShiftControllerFindAllApiResponse =
   /** status 200 List of shifts. */ Shift[];
 export type ShiftControllerFindAllApiArg = {
-  /** Filter shifts by production line ID */
+  /** Filter shifts by machine ID */
   id?: number;
 };
 export type ShiftControllerFindOneApiResponse =
@@ -362,10 +415,46 @@ export type ShiftControllerRemoveApiResponse = unknown;
 export type ShiftControllerRemoveApiArg = {
   id: number;
 };
-export type QrCodeControllerCreateApiResponse =
-  /** status 201 The QRcode scanned */ Qrcode;
-export type QrCodeControllerCreateApiArg = {
+export type HardwareActionControllerCreateQrCodeApiResponse =
+  /** status 201 The QR code has been created. */ Qrcode;
+export type HardwareActionControllerCreateQrCodeApiArg = {
   createQrCodeDto: CreateQrCodeDto;
+};
+export type HardwareActionControllerCreateRfidApiResponse =
+  /** status 201 The RFID entry has been created. */ Rfid;
+export type HardwareActionControllerCreateRfidApiArg = {
+  createRfidDto: CreateRfidDto;
+};
+export type MesControllerFindAllRecordApiResponse =
+  /** status 200 Array of all finded Record. */ Record[];
+export type MesControllerFindAllRecordApiArg = void;
+export type MesControllerFindAllRecordByMachineAndDateTimeApiResponse =
+  /** status 200 list of found record matched query. */ Record[];
+export type MesControllerFindAllRecordByMachineAndDateTimeApiArg = {
+  /** Filter record by machine ID */
+  machineId: number;
+  /** Filter records by start date and time */
+  startTime?: string;
+  /** Filter records by end date and time */
+  endTime?: string;
+};
+export type MesControllerGetDailyLineChartDataApiResponse =
+  /** status 200 Data for daily record line chart */ number[];
+export type MesControllerGetDailyLineChartDataApiArg = {
+  /** Filter record by machine ID */
+  machineId: number;
+  /** time of day */
+  time: string;
+};
+export type MesControllerFindOneRecordApiResponse =
+  /** status 200 Single message retrieved successfully. */ Record;
+export type MesControllerFindOneRecordApiArg = {
+  moduleSerialNo: string;
+};
+export type MonitorServiceManagerControllerGetMachineStateApiResponse = unknown;
+export type MonitorServiceManagerControllerGetMachineStateApiArg = {
+  /** Filter record by machine ID */
+  machineId: number;
 };
 export type FileEntity = {
   id: string;
@@ -455,37 +544,43 @@ export type AuthUpdateDto = {
   password: string;
   oldPassword: string;
 };
-export type ProductionLine = {
-  /** The unique identifier of the production line */
+export type Machine = {
+  /** The unique identifier of the machine */
   id: number;
-  /** System ID of the production line */
+  /** System ID of the machine */
   systemID: string;
-  /** Line ID of the production line */
+  /** Line ID of the machine */
   lineID: string;
-  /** Name of the station in the production line */
+  /** Name of the station in the machine */
   stationName: string;
-  /** Station ID in the production line */
+  /** Station ID in the machine */
   stationID: string;
-  /** Description of the production line */
+  /** Description of the machine */
   description: string;
-  /** IP address of the production line */
-  ipAddress: string;
+  /** IP address of the machine */
+  ip: string;
+  /** Creation date of the machine record */
+  createdAt: string;
+  /** Last update date of the machine record */
+  updatedAt: string;
+  /** Deletion date of the machine record */
+  deletedAt: string | null;
 };
-export type CreateProductionLineDto = {
+export type CreateMachineDto = {
   systemID: string;
   lineID: string;
   stationName: string;
   stationID: string;
   description: string;
-  ipAddress: string;
+  ip: string;
 };
-export type UpdateProductionLineDto = {
+export type UpdateMachineDto = {
   systemID: string;
   lineID: string;
   stationName: string;
   stationID: string;
   description: string;
-  ipAddress: string;
+  ip: string;
 };
 export type Shift = {
   /** The unique identifier of the shift */
@@ -497,29 +592,119 @@ export type Shift = {
   /** End time of the shift */
   endTime: string;
 };
+export type PartialType = {};
 export type CreateShiftDto = {
   shiftName: string;
   startTime: string;
   endTime: string;
-  productionLine: object;
+  /** The machine where the shift is assigned */
+  machine: PartialType;
 };
 export type UpdateShiftDto = {
   shiftName?: string;
   startTime?: string;
   endTime?: string;
-  productionLineId?: number;
+  machineId?: number;
 };
 export type Qrcode = {
-  /** The unique identifier of the production line */
+  /** The unique identifier of the machine */
   id: number;
   /** barcode scan by the system */
   code: string;
+  /** The machine associated with this QR code */
+  machine: Machine;
   /** Scan date of the code */
   createdAt: string;
 };
 export type CreateQrCodeDto = {
   /** barcode scan by the system */
   code: string;
+  /** The machine where the QR code is generated */
+  machine: PartialType;
+};
+export type Rfid = {
+  /** The unique identifier of the RFID tag */
+  id: number;
+  /** The RFID tag scanned by the system */
+  rfidTag: string;
+  /** The machine associated with this QR code */
+  machine: Machine;
+  /** Scan date of the RFID tag */
+  createdAt: string;
+};
+export type CreateRfidDto = {
+  /** rfid scan by the system */
+  code: string;
+  /** The machine where the QR code is generated */
+  machine: PartialType;
+};
+export type RecordData = {
+  /** The OPID of the record data */
+  OPID: string;
+  /** The value of CurDta_QD01 */
+  CurDta_QD01: number;
+  /** The value of CurDta_QD02 */
+  CurDta_QD02: number;
+  /** The value of CurDta_QD03 */
+  CurDta_QD03: number;
+  /** The value of CurDta_QD04 */
+  CurDta_QD04: number;
+  /** The value of PrvDta1_QD01 */
+  PrvDta1_QD01: number;
+  /** The value of PrvDta1_QD02 */
+  PrvDta1_QD02: number;
+  /** The value of PrvDta1_QD03 */
+  PrvDta1_QD03: number;
+  /** The value of PrvDta1_QD04 */
+  PrvDta1_QD04: number;
+  /** The value of PrvDta2_QD01 */
+  PrvDta2_QD01: number;
+  /** The value of PrvDta2_QD02 */
+  PrvDta2_QD02: number;
+  /** The value of PrvDta2_QD03 */
+  PrvDta2_QD03: number;
+  /** The value of PrvDta2_QD04 */
+  PrvDta2_QD04: number;
+  /** The value of TryCnt */
+  TryCnt: number;
+  /** The value of RT */
+  RT: number;
+  /** The value of OType */
+  OType: number;
+  /** The minimum value of QD01 */
+  QD01_Min: number;
+  /** The maximum value of QD01 */
+  QD01_Max: number;
+  /** The minimum value of QD02 */
+  QD02_Min: number;
+  /** The maximum value of QD02 */
+  QD02_Max: number;
+  /** The minimum value of QD03 */
+  QD03_Min: number;
+  /** The maximum value of QD03 */
+  QD03_Max: number;
+  /** The minimum value of QD04 */
+  QD04_Min: number;
+  /** The maximum value of QD04 */
+  QD04_Max: number;
+  /** The name of the operator */
+  OperatorName: string;
+  /** The additional text */
+  OPTxt: string;
+};
+export type Record = {
+  /** Serial number of the record */
+  moduleSerialNo: string;
+  /** Date time of the record */
+  systemDt: string;
+  /** Result of the record: 1:ok, 2:ng */
+  result: number;
+  /** The machine of the record */
+  machine: Machine;
+  /** The record data of the record */
+  recordDatas: RecordData[];
+  /** Creation date of the machine record */
+  createdAt: string;
 };
 export const {
   useUsersControllerCreateMutation,
@@ -539,15 +724,21 @@ export const {
   useAuthControllerUpdateMutation,
   useAuthControllerDeleteMutation,
   useHomeControllerAppInfoQuery,
-  useProductionLineControllerCreateMutation,
-  useProductionLineControllerFindAllQuery,
-  useProductionLineControllerFindOneQuery,
-  useProductionLineControllerUpdateMutation,
-  useProductionLineControllerRemoveMutation,
+  useMachineControllerCreateMutation,
+  useMachineControllerFindAllQuery,
+  useMachineControllerFindOneQuery,
+  useMachineControllerUpdateMutation,
+  useMachineControllerRemoveMutation,
   useShiftControllerCreateMutation,
   useShiftControllerFindAllQuery,
   useShiftControllerFindOneQuery,
   useShiftControllerUpdateMutation,
   useShiftControllerRemoveMutation,
-  useQrCodeControllerCreateMutation,
+  useHardwareActionControllerCreateQrCodeMutation,
+  useHardwareActionControllerCreateRfidMutation,
+  useMesControllerFindAllRecordQuery,
+  useMesControllerFindAllRecordByMachineAndDateTimeQuery,
+  useMesControllerGetDailyLineChartDataQuery,
+  useMesControllerFindOneRecordQuery,
+  useMonitorServiceManagerControllerGetMachineStateQuery,
 } = injectedRtkApi;

@@ -50,8 +50,8 @@ const PromptModal: React.FC<PromptModalProps> = ({
             <HiInformationCircle className="mx-2 text-3xl text-blue-500"></HiInformationCircle>
           ),
           childComponent: (
-            <div className="flex flex-row items-center px-5 py-4 mx-5 mt-4 bg-gray-800 rounded-lg">
-              <pre className="font-mono text-sm text-left text-white">
+            <div className="flex flex-row items-center px-4 py-4 mx-5 mt-4 bg-gray-800 rounded-lg">
+              <pre className="font-mono text-sm text-left text-white max-h-96 overflow-auto hide-scrollbar">
                 {data}
               </pre>
             </div>

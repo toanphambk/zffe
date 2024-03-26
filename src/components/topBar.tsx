@@ -10,17 +10,20 @@ import GenericFormModal, {
   GenericFormModalProps,
 } from "./genericFormModal";
 import {
-  Qrcode,
-  useQrCodeControllerCreateMutation,
+  Machine,
+  Qrcode, useHardwareActionControllerCreateQrCodeMutation,
 } from "@/redux/services/api";
-import { removeModal, setModal } from "@/redux/UI/modalSlice";
+import { setModal } from "@/redux/UI/modalSlice";
+import PromptModal from "./promtModal";
+import { Modal, ModalFuncProps } from "antd";
 
 export const TopBar: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { activeIndex } = useAppSelector((state) => state.sidebarReducer);
   const { user } = useAppSelector((state) => state.authReducer);
-  const [createMutation] = useQrCodeControllerCreateMutation();
+  const { machine } = useAppSelector((state) => state.appSettingReducer);
+  const [createMutation] = useHardwareActionControllerCreateQrCodeMutation();
 
   const currentPageName =
     activeIndex !== -1 ? menuItems[activeIndex].label : "Unknown Page";
@@ -31,14 +34,18 @@ export const TopBar: React.FC = () => {
   ];
 
   const onScanClickHandler = () => {
-    const scanConfig = getScanConfig();
-    dispatch(setModal(<GenericFormModal {...scanConfig} />));
+    const addModalConfig = getScanConfig();
+    dispatch(setModal(<GenericFormModal {...addModalConfig} />));
   };
 
-  function getScanConfig(): GenericFormModalProps<Qrcode, any> {
+  function getScanConfig(): GenericFormModalProps<Qrcode, Machine> {
     const icon = (
       <HiQrcode className="mt-1 mr-5 text-3xl text-blue-600"></HiQrcode>
     );
+
+    if (machine === undefined) {
+      throw ("Please setup machine");
+    }
 
     return {
       icon,
@@ -49,7 +56,7 @@ export const TopBar: React.FC = () => {
       onSubmit: async ({ formData }) => {
         try {
           let response = await createMutation({
-            createQrCodeDto: formData,
+            createQrCodeDto: { code: formData.code, machine },
           }).unwrap();
           if (response) {
             setTimeout(() => {

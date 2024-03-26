@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ProductionLine } from '../services/api';
+import { Machine } from '../services/api';
 
 interface SettingPageState {
-  selectedProductionLine: ProductionLine | undefined;
+  selectedMachine: Machine | undefined;
 }
 
 const initialState: SettingPageState = {
-  selectedProductionLine: undefined,
+  selectedMachine: undefined,
 };
 
 const settingPageSlice = createSlice({
@@ -14,18 +14,18 @@ const settingPageSlice = createSlice({
   initialState,
   reducers: {
     removeModal: () => initialState,
-    setSelectedProductionLine: (state, action: PayloadAction<ProductionLine>) => {
+    setSelectedMachine: (state, action: PayloadAction<Machine>) => {
       const { id } = action.payload
-      // if (state.selectedProductionLine?.id === id) {
-      //   state.selectedProductionLine = initialState.selectedProductionLine;
+      // if (state.selectedMachine?.id === id) {
+      //   state.selectedMachine = initialState.selectedMachine;
       // }
-      state.selectedProductionLine = action.payload;
+      state.selectedMachine = action.payload;
     },
   }
 });
 
 export const {
-  setSelectedProductionLine
+  setSelectedMachine
 } = settingPageSlice.actions;
 
 export default settingPageSlice.reducer;

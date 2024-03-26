@@ -1,5 +1,8 @@
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useMonitorServiceManagerControllerGetMachineStateQuery } from "@/redux/services/api";
 import { Card, DonutChart, Legend, Title } from "@tremor/react";
-import React from "react";
+import { machine } from "os";
+import React, { useEffect, useState } from "react";
 
 const data = [
   {

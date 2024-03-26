@@ -19,19 +19,20 @@ import PromptModal, { PromptModalProps } from "@/components/promtModal";
 import { useState } from "react";
 import DataTable from "react-data-table-component";
 import {
-  ProductionLine,
+  Machine,
   Shift,
   useShiftControllerCreateMutation,
   useShiftControllerFindAllQuery,
   useShiftControllerRemoveMutation,
   useShiftControllerUpdateMutation,
 } from "../../../redux/services/api";
+import { setAppSettingMachine } from "@/redux/data/appSettingSlice";
 
 const ShiftTable: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const { selectedProductionLine } = useAppSelector(
-    (state) => state.settingPageReducer
+  const { machine } = useAppSelector(
+    (state) => state.appSettingReducer
   );
 
   const {
@@ -39,9 +40,9 @@ const ShiftTable: React.FC = () => {
     data: shift,
     isSuccess,
   } = useShiftControllerFindAllQuery(
-    selectedProductionLine ? { id: selectedProductionLine.id } : {},
+    machine ? { id: machine.id } : {},
     {
-      skip: !Boolean(selectedProductionLine),
+      skip: !Boolean(machine),
     }
   );
 
@@ -51,7 +52,7 @@ const ShiftTable: React.FC = () => {
   const [isDisplay, setDisplay] = useState(true);
 
   const columns = [
-    { 
+    {
       name: "Shift Name",
       selector: (row: Shift) => row.shiftName,
     },
@@ -104,10 +105,15 @@ const ShiftTable: React.FC = () => {
       require: true,
       key: "startTime",
     },
-    { type: "timePicker", title: "End Time", require: true, key: "endTime" },
+    {
+      type: "timePicker",
+      title: "End Time",
+      require: true,
+      key: "endTime"
+    },
   ];
 
-  function getAddModalConfig(): GenericFormModalProps<Shift, ProductionLine> {
+  function getAddModalConfig(): GenericFormModalProps<Shift, Machine> {
     const icon = (
       <HiPlusCircle className="mt-1 mr-5 text-3xl text-green-500"></HiPlusCircle>
     );
@@ -116,7 +122,7 @@ const ShiftTable: React.FC = () => {
       icon,
       title: "Add Shift",
       sucessMessage: "Added Done",
-      data: selectedProductionLine,
+      data: machine,
       errorMessage: "Added Fail",
       submitBtnColor: "blue",
       onSubmit: async ({ formData }) => {
@@ -124,8 +130,8 @@ const ShiftTable: React.FC = () => {
           await createMutation({
             createShiftDto: {
               ...formData,
-              productionLine: selectedProductionLine
-                ? selectedProductionLine
+              machine: machine
+                ? machine
                 : {},
             },
           }).unwrap();
@@ -217,13 +223,14 @@ const ShiftTable: React.FC = () => {
     const editModalConfig = getEditModalConfig(item);
     dispatch(setModal(<GenericFormModal {...editModalConfig} />));
   };
+
   const onDeleteClickHandler = (item: Shift) => {
     const deleteModalConfig = getDeleteModalConfig(item);
     dispatch(setModal(<SubmitModal {...deleteModalConfig} />));
   };
 
   // const onSelectClickHandler = (item: Shift) => {
-  //   dispatch(setSelectedProductionLine(item));
+  //   dispatch(setmachine(item));
   // };
 
   const onDisplayToggle = async () => {

@@ -2,6 +2,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Providers } from "@/redux/provider";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,9 +13,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body  suppressHydrationWarning={true} >
+      <body suppressHydrationWarning={true} >
         <main>
-          <Providers>{children}</Providers>
+          <AntdRegistry>
+            <Providers>
+              {children}
+            </Providers>
+          </AntdRegistry>
         </main>
       </body>
     </html>

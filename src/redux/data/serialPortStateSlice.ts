@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PortsSetting } from './portsSettingSlice';
 
 interface DeviceState {
     isOpen: boolean;
@@ -21,17 +20,16 @@ export const serialPortStateSlice = createSlice({
     name: 'serialPortState',
     initialState,
     reducers: {
-        setOpenState: (state, action: PayloadAction<{ device: keyof PortsSetting; isOpen: boolean }>) => {
+        setOpenState: (state, action: PayloadAction<{ device: keyof SerialPortState; isOpen: boolean }>) => {
             const { device, isOpen } = action.payload;
             state[device].isOpen = isOpen;
         },
-        setData: (state, action: PayloadAction<{ device: keyof PortsSetting; data: string }>) => {
+        setData: (state, action: PayloadAction<{ device: keyof SerialPortState; data: string }>) => {
             const { device, data } = action.payload;
             console.log(data);
-
             state[device].data = data;
         },
-        setError: (state, action: PayloadAction<{ device: keyof PortsSetting; error: string | null }>) => {
+        setError: (state, action: PayloadAction<{ device: keyof SerialPortState; error: string | null }>) => {
             const { device, error } = action.payload;
             state[device].error = error;
         },

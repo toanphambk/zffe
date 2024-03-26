@@ -3,10 +3,9 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Card, Text, Divider } from "@tremor/react";
 import { HiChartBar } from "react-icons/hi";
-import { menuItems, SetSidebarActiveIndex } from "@/redux/UI/sideBarSlice";
+import { menuItems } from "@/redux/UI/sideBarSlice";
 
 const SideBar: React.FC = () => {
-  const dispatch = useAppDispatch();
   const { activeIndex } = useAppSelector((state) => state.sidebarReducer);
 
   return (
@@ -27,7 +26,7 @@ const SideBar: React.FC = () => {
             hover:${index === activeIndex ? "" : "bg-gray-500"}
             ${index === activeIndex ? "bg-blue-400" : ""}`}
           >
-            <item.icon className="ml-3 mr-5 text-2xl" />
+            <item.icon className="ml-3 mr-5 text-white text-2xl" />
             <Text className="text-lg font-semibold text-white">
               {item.label}
             </Text>

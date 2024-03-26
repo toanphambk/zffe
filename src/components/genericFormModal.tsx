@@ -3,6 +3,7 @@ import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { removeModal, setModal } from "@/redux/UI/modalSlice";
 import {
+  DateRangePicker,
   NumberInput,
   Select,
   SelectItem,
@@ -11,6 +12,7 @@ import {
   Textarea,
 } from "@tremor/react";
 import PromptModal from "./promtModal";
+import { DatePicker } from "antd";
 
 export interface GenericFormModalProps<FormData, DataType> {
   icon: React.ReactNode;
@@ -27,7 +29,7 @@ export interface GenericFormModalProps<FormData, DataType> {
 
 export type FieldConfig<T> = {
   title: string;
-  type: "text" | "textarea" | "timePicker" | "number" | "select";
+  type: "text" | "textarea" | "timePicker" | "number" | "select" | "datePicker" | "dateRangePicker";
   require: boolean;
   key: keyof T;
   focus?: boolean;
@@ -189,6 +191,25 @@ const GenericFormModal: React.FC<GenericFormModalProps<any, any>> = ({
                       </SelectItem>
                     ))}
                   </Select>
+                );
+              case "datePicker":
+                return (
+                  <DatePicker
+                    value={formData[field.key]}
+                    onChange={(val) => inputChangeHandler(val, field.key)}
+                    autoFocus={field.focus}
+                    aria-label={field.title}
+                  />
+                );
+              case "dateRangePicker":
+                return (
+                  <DateRangePicker
+                    value={formData[field.key]}
+                    onValueChange={(val) => inputChangeHandler(val, field.key)}
+                    autoFocus={field.focus}
+                    aria-label={field.title}
+                    enableSelect={false}
+                  />
                 );
             }
           })()}

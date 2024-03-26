@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HiAdjustments, HiHome, HiLogout, HiUser } from "react-icons/hi";
+import { HiAdjustments, HiDocument, HiHome, HiLogout, HiUser } from "react-icons/hi";
 
 interface SidebarState {
     activeIndex: number;
@@ -28,7 +28,8 @@ const sidebarSlice = createSlice({
 
 export const menuItems: MenuItem[] = [
     { icon: HiHome, label: "Home", link: "/home" },
-    { icon: HiAdjustments, label: 'Setting', link: "/home/setting" },
+    { icon: HiDocument, label: "Report", link: "/home/report" },
+    { icon: HiAdjustments, label: "Setting", link: "/home/setting" },
     { icon: HiUser, label: "Profile", link: "/home/profile" },
     { icon: HiLogout, label: "Logout", link: "/login" },
 ]

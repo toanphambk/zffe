@@ -15,6 +15,7 @@ import settingPageReducer from "./UI/settingPageSlice";
 import authReducer from "./data/authSlice";
 import portsSettingReducer from "./data/portsSettingSlice"
 import serialPortStateReducer from './data/serialPortStateSlice';
+import appSettingReducer from './data/appSettingSlice';
 
 //Api middleware
 import { api } from './services/api';
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   loginReducer,
   modalReducer,
   portsSettingReducer,
-  serialPortStateReducer
+  serialPortStateReducer,
+  appSettingReducer,
 });
 
 const persistConfig = {

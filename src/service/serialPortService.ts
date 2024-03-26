@@ -1,61 +1,64 @@
 import { PortsSetting } from "@/redux/data/portsSettingSlice";
 import { setOpenState, setData, setError } from "../redux/data/serialPortStateSlice";
-import { AppDispatch, RootState } from "@/redux/store";
-import { Store } from "redux";
+import { store } from "@/redux/store";
+import { useAppDispatch } from "@/redux/hooks";
 
 export class SerialPortService {
     private port: SerialPort | null = null;
     private reader: ReadableStreamDefaultReader | null = null;
     private writer: WritableStreamDefaultWriter | null = null;
-    private device: keyof PortsSetting;
-    private dispatch: AppDispatch;
-    private getState: () => RootState;
+    private openingInProgress = false;
+    private dispatch = useAppDispatch();
+    private getState = () => store.getState()
 
-    constructor(device: keyof PortsSetting, store: Store<RootState>, dispatch: AppDispatch) {
-        this.dispatch = dispatch;
-        this.getState = () => store.getState()
-        this.device = device;
+    constructor(private device: keyof PortsSetting, private processData: (data: string) => Promise<void>, private enableDataComparison: boolean = true) {
         navigator.serial.addEventListener('connect', this.handleConnect);
         navigator.serial.addEventListener('disconnect', this.handleDisconnect);
     }
 
     async openPort() {
-        if (this.port) {
-            console.log('An open operation is already in progress.');
+        if (this.port || this.openingInProgress) {
+            console.log('Port is already open or being opened.');
             return;
         }
+        this.openingInProgress = true;
 
         const { portInfo, portOption } = this.getPortSettings();
 
-        if ('serial' in navigator && portInfo && portOption) {
-            try {
-                const ports = await navigator.serial.getPorts();
-                const port = ports.find(p => p.getInfo().usbVendorId === portInfo.usbVendorId && p.getInfo().usbProductId === portInfo.usbProductId);
+        if (!('serial' in navigator)) {
+            console.error("Web Serial API not supported.");
+            return;
+        }
 
-                if (!port) {
-                    throw new Error("No matching port found");
-                }
+        if (!portInfo || !portOption) {
+            console.error("Port settings are missing.");
+            return;
+        }
 
-                await port.open(portOption);
-                this.port = port;
-                this.dispatch(setOpenState({ device: this.device, isOpen: true }));
-                this.reader = port.readable?.getReader();
-                this.writer = port.writable?.getWriter();
-                this.readData();
-            } catch (error) {
-                console.error(`Error opening serial port for device ${this.device}:`, error);
-                this.dispatch(setError({ device: this.device, error: error instanceof Error ? error.message : String(error) }));
+        try {
+            const ports = await navigator.serial.getPorts();
+            const port = ports.find(p => p.getInfo().usbVendorId === portInfo.usbVendorId && p.getInfo().usbProductId === portInfo.usbProductId);
+
+            if (!port) {
+                throw new Error("No matching port found");
             }
-        } else {
-            console.error("Web Serial API not supported or port settings are missing.");
+
+            await port.open(portOption);
+            this.port = port;
+            this.dispatch(setOpenState({ device: this.device, isOpen: true }));
+            this.reader = port.readable?.getReader();
+            this.writer = port.writable?.getWriter();
+            this.openingInProgress = false;
+            this.readData();
+        } catch (error) {
+            console.error(`Error opening serial port for device ${this.device}:`, error);
+            this.dispatch(setError({ device: this.device, error: error instanceof Error ? error.message : String(error) }));
+            this.openingInProgress = false;
         }
     }
 
-
     getPortSettings() {
-        const state = this.getState();
-        const settings = state.portsSettingReducer[this.device];
-
+        const settings = this.getState().portsSettingReducer[this.device];
         if (!settings) {
             throw (`No settings found for device: ${this.device}`)
         }
@@ -73,10 +76,8 @@ export class SerialPortService {
         }
 
         let accumulatedData = "";
-        let lastDispatchedData = "";
-
         try {
-            while (true) {
+            while (this.port && this.reader) {
                 const { value, done } = await this.reader.read();
                 if (done) {
                     console.log("Stream closed or reader released.");
@@ -84,16 +85,23 @@ export class SerialPortService {
                     break;
                 }
 
-                accumulatedData += new TextDecoder().decode(value);
+                const text = new TextDecoder().decode(value);
 
-                if (accumulatedData.endsWith('\r')) {
-                    let dataToDispatch = accumulatedData.slice(0, -1);
-                    accumulatedData = "";
-
-
-                    if (dataToDispatch !== lastDispatchedData) {
-                        this.dispatch(setData({ device: this.device, data: dataToDispatch }));
-                        lastDispatchedData = dataToDispatch;
+                for (let char of text) {
+                    if (char === '\n') {
+                        continue;
+                    }
+                    accumulatedData += char;
+                    if (char === '\r') {
+                        let dataToDispatch = accumulatedData.slice(0, -1);
+                        accumulatedData = "";
+                        if (!this.enableDataComparison || dataToDispatch !== this.getState().serialPortStateReducer[this.device].data) {
+                            await this.processData(dataToDispatch);
+                            this.dispatch(setData({ device: this.device, data: dataToDispatch }));
+                        } else {
+                            // Optionally, handle the case where data is the same as last dispatched data and comparison is enabled
+                            // For example, you might want to log this occurrence or perform some other action.
+                        }
                     }
                 }
             }
@@ -140,7 +148,7 @@ export class SerialPortService {
 
         const port = event.target as SerialPort;
         const { portInfo } = this.getPortSettings()
-        
+
         if (port.getInfo().usbVendorId === portInfo?.usbVendorId && port.getInfo().usbProductId === portInfo?.usbProductId) {
             if (!this.port || this.port !== port) {
                 try {
@@ -152,7 +160,7 @@ export class SerialPortService {
             }
         }
     };
-    
+
 
     handleDisconnect = async (event: Event) => {
         console.log('Serial port disconnected:', event.target);

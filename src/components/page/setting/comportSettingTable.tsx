@@ -229,7 +229,7 @@ const ComportSettingTable: React.FC = () => {
 
   return (
     <div className="flex flex-row w-full">
-      <Card className="flex flex-col w-full mt-5 ">
+      <Card className="flex flex-col w-full mt-2">
         <div className="flex flex-row justify-between w-full">
           <div className="flex items-center">
             <Title>Setting</Title>
